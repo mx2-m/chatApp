@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lib.User;
+import com.example.secondapplication.ApplicationChat;
 import com.example.secondapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,12 +33,12 @@ import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAdapter> {
 
-    List<User>list;
+    List<User> list;
     Context context;
+    ApplicationChat app;
 
-    FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     public UsersAdapter(List<User> list, Context context) {
@@ -49,55 +50,57 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
     @NonNull
     @Override
     public viewHolderAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.row_users,parent,false);
-        viewHolderAdapter holder=new viewHolderAdapter(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_users, parent, false);
+        viewHolderAdapter holder = new viewHolderAdapter(view);
+
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolderAdapter holder, int position) {
-        User users= list.get(position);
-        final Vibrator vibrator= (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        User users = list.get(position);
+
+        boolean vibration = app.isMusic();
+
+        final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         Glide.with(context).load(users.getPhoto()).into(holder.imageView);
         holder.textView.setText(users.getName());
 
-        if(users.getId().equals(user.getUid())){
-           holder.cardView.setVisibility(View.GONE);
-        }
-        else {
+        if (users.getId().equals(user.getUid())) {
+            holder.cardView.setVisibility(View.GONE);
+        } else {
             holder.cardView.setVisibility(View.VISIBLE);
         }
 
-        DatabaseReference buttons=database.getReference("Users").child(user.getUid()).child("Requests").child(users.getId());
+        DatabaseReference buttons = database.getReference("Users").child(user.getUid()).child("Requests").child(users.getId());
         buttons.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String state=snapshot.child("state").getValue(String.class);
-if(snapshot.exists()){
-                if(state.equals("sent")){
-                    holder.send.setVisibility(View.VISIBLE);
-                    holder.add.setVisibility(View.GONE);
-                    holder.request.setVisibility(View.GONE);
-                    holder.friends.setVisibility(View.GONE);
-                }
-                if(state.equals("friends")){
-                    holder.friends.setVisibility(View.VISIBLE);
-                    holder.add.setVisibility(View.GONE);
-                    holder.request.setVisibility(View.GONE);
-                    holder.send.setVisibility(View.GONE);
+                String state = snapshot.child("state").getValue(String.class);
+                if (snapshot.exists()) {
+                    if (state.equals("sent")) {
+                        holder.send.setVisibility(View.VISIBLE);
+                        holder.add.setVisibility(View.GONE);
+                        holder.request.setVisibility(View.GONE);
+                        holder.friends.setVisibility(View.GONE);
+                    }
+                    if (state.equals("friends")) {
+                        holder.friends.setVisibility(View.VISIBLE);
+                        holder.add.setVisibility(View.GONE);
+                        holder.request.setVisibility(View.GONE);
+                        holder.send.setVisibility(View.GONE);
 
-                }
+                    }
 
-                if(state.equals("request")){
-                    holder.request.setVisibility(View.VISIBLE);
-                    holder.add.setVisibility(View.GONE);
-                    holder.friends.setVisibility(View.GONE);
-                    holder.send.setVisibility(View.GONE);
+                    if (state.equals("request")) {
+                        holder.request.setVisibility(View.VISIBLE);
+                        holder.add.setVisibility(View.GONE);
+                        holder.friends.setVisibility(View.GONE);
+                        holder.send.setVisibility(View.GONE);
 
-                }}
-
-                else{
+                    }
+                } else {
                     holder.add.setVisibility(View.VISIBLE);
                     holder.request.setVisibility(View.GONE);
                     holder.friends.setVisibility(View.GONE);
@@ -116,7 +119,7 @@ if(snapshot.exists()){
             @Override
             public void onClick(View v) {
 
-                DatabaseReference reference=database.getReference("Users").child(user.getUid()).child("Requests");
+                DatabaseReference reference = database.getReference("Users").child(user.getUid()).child("Requests");
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,12 +134,12 @@ if(snapshot.exists()){
                 });
 
 
-                DatabaseReference reference1=database.getReference("Users").child(users.getId()).child("Requests");
+                DatabaseReference reference1 = database.getReference("Users").child(users.getId()).child("Requests");
                 reference1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            reference1.child(user.getUid()).child("state").setValue("request");
+                        reference1.child(user.getUid()).child("state").setValue("request");
 
                     }
 
@@ -147,22 +150,20 @@ if(snapshot.exists()){
                 });
 
 
-                DatabaseReference count= database.getReference("Users").child(users.getId()).child("requests");
+                DatabaseReference count = database.getReference("Users").child(users.getId()).child("requests");
                 count.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                       if(snapshot.exists()){
-                           Integer value=snapshot.getValue(Integer.class);
-                           if(value==0){
-                               count.setValue(1);
-                           }
-                           else {
-                               count.setValue(value+1);
-                           }
+                        if (snapshot.exists()) {
+                            Integer value = snapshot.getValue(Integer.class);
+                            if (value == 0) {
+                                count.setValue(1);
+                            } else {
+                                count.setValue(value + 1);
+                            }
 
 
-
-                       }
+                        }
                     }
 
                     @Override
@@ -170,7 +171,8 @@ if(snapshot.exists()){
 
                     }
                 });
-vibrator.vibrate(400);
+                if(vibration){
+                vibrator.vibrate(400);}
             }
         });
 
@@ -178,7 +180,7 @@ vibrator.vibrate(400);
             @Override
             public void onClick(View v) {
 
-                DatabaseReference reference=database.getReference("Users").child(user.getUid()).child("Requests");
+                DatabaseReference reference = database.getReference("Users").child(user.getUid()).child("Requests");
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -192,7 +194,7 @@ vibrator.vibrate(400);
                     }
                 });
 
-                DatabaseReference reference1=database.getReference("Users").child(users.getId()).child("Requests");
+                DatabaseReference reference1 = database.getReference("Users").child(users.getId()).child("Requests");
                 reference1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -207,7 +209,8 @@ vibrator.vibrate(400);
                     }
                 });
 
-                vibrator.vibrate(400);
+                if(vibration){
+                vibrator.vibrate(400);}
 
             }
         });
@@ -229,18 +232,17 @@ vibrator.vibrate(400);
         ProgressBar progressBar;
 
 
-
         public viewHolderAdapter(@NonNull View itemView) {
             super(itemView);
 
-            textView= itemView.findViewById(R.id.textViewUsers);
-            imageView=itemView.findViewById(R.id.imgUser);
-            cardView=itemView.findViewById(R.id.cardView);
-            add=itemView.findViewById(R.id.add);
-            send=itemView.findViewById(R.id.send);
-            request=itemView.findViewById(R.id.request);
-            friends=itemView.findViewById(R.id.friend);
-            progressBar=itemView.findViewById(R.id.progressBar);
+            textView = itemView.findViewById(R.id.textViewUsers);
+            imageView = itemView.findViewById(R.id.imgUser);
+            cardView = itemView.findViewById(R.id.cardView);
+            add = itemView.findViewById(R.id.add);
+            send = itemView.findViewById(R.id.send);
+            request = itemView.findViewById(R.id.request);
+            friends = itemView.findViewById(R.id.friend);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }
