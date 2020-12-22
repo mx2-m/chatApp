@@ -34,7 +34,6 @@ import java.util.ArrayList;
 public class UsersFragment extends Fragment {
 
 
-
     public UsersFragment() {
         // Required empty public constructor
     }
@@ -45,13 +44,13 @@ public class UsersFragment extends Fragment {
 
         ProgressBar progressBar;
 
-        final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-        View view =inflater.inflate(R.layout.fragment_users, container, false);
-        TextView textView= view.findViewById(R.id.textViewUsers);
-        ImageView imageView=view.findViewById(R.id.imgUser);
-        progressBar=view.findViewById(R.id.progressBar);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        View view = inflater.inflate(R.layout.fragment_users, container, false);
+        TextView textView = view.findViewById(R.id.textViewUsers);
+        ImageView imageView = view.findViewById(R.id.imgUser);
+        progressBar = view.findViewById(R.id.progressBar);
 
-        assert user !=null;
+        assert user != null;
         textView.setText(user.getDisplayName());
         Glide.with(this).load(user.getPhotoUrl()).into(imageView); // https://github.com/bumptech/glide
 
@@ -61,36 +60,35 @@ public class UsersFragment extends Fragment {
         UsersAdapter userAdapter;
         LinearLayoutManager layoutManager;
 
-        layoutManager= new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
-        rv=view.findViewById(R.id.rv);
+        rv = view.findViewById(R.id.rv);
         rv.setLayoutManager(layoutManager);
 
-        list=new ArrayList<>();
-        userAdapter= new UsersAdapter(list,getContext());
+        list = new ArrayList<>();
+        userAdapter = new UsersAdapter(list, getContext());
         rv.setAdapter(userAdapter);
 
-        FirebaseDatabase database= FirebaseDatabase.getInstance();
-        DatabaseReference ref= database.getReference("Users");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Users");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if(snapshot.exists()){
-                   list.removeAll(list);
-                   for(DataSnapshot snapshot1: snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    list.removeAll(list);
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
 
-                       rv.setVisibility(View.VISIBLE);
-                       progressBar.setVisibility(View.GONE);
-                       User user1= snapshot1.getValue(User.class);
-                       list.add(user1);
+                        rv.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        User user1 = snapshot1.getValue(User.class);
+                        list.add(user1);
 
-                   }
-                        userAdapter.notifyDataSetChanged();
-                }
-                else
-                    Toast.makeText(getContext(),"No users",Toast.LENGTH_SHORT).show();
+                    }
+                    userAdapter.notifyDataSetChanged();
+                } else
+                    Toast.makeText(getContext(), "No users", Toast.LENGTH_SHORT).show();
             }
 
             @Override

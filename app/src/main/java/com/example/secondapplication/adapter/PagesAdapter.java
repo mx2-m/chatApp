@@ -20,13 +20,12 @@ public class PagesAdapter extends FragmentStateAdapter {
     }
 
 
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
+        switch (position) {
             case 0:
-            return new UsersFragment();
+                return new UsersFragment();
             case 1:
                 return new ChatsFragment();
             case 2:

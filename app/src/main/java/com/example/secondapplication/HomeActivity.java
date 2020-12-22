@@ -1,10 +1,8 @@
 package com.example.secondapplication;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -14,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.lib.State;
 import com.example.lib.User;
 import com.example.secondapplication.adapter.PagesAdapter;
 import com.google.android.material.badge.BadgeDrawable;
@@ -26,17 +25,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 //import com.example.lib.User;
 
 
+//POPRAVITI SVE ZA "MOJ PROFIL"
 public class HomeActivity extends AppCompatActivity {
 
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("Users").child(user.getUid());
-    DatabaseReference referenceRequests = database.getReference("Users").child(user.getUid()).child("requests");
-
+    //DatabaseReference referenceRequests = database.getReference("Users").child(user.getUid()).child("requests");
+    DatabaseReference referenceCount = database.getReference("Count").child(user.getUid());
+    DatabaseReference referenceState = database.getReference("State").child(user.getUid());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
                         badgeDrawable.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
 
-                        referenceRequests.addValueEventListener(new ValueEventListener() {
+                        referenceCount.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists()) {
@@ -94,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         break;
                     case 3:
-                        tab.setText("My Requests");
+                        tab.setText("My Profile");
                         tab.setIcon(R.drawable.ic_requests);
                         break;
 
@@ -118,20 +122,71 @@ public class HomeActivity extends AppCompatActivity {
                     count();
                 }
 
-
             }
         });
 
         // final FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         userUnique();
+        //userState();
+    }
+
+    private void userState(String state) {
+        referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                State state1=new State(state," ","");
+                referenceState.setValue(state1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userState("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        userState("offline");
+        getTime();
+    }
+
+    private void getTime() {
+        Calendar calendar=Calendar.getInstance();
+        SimpleDateFormat time=new SimpleDateFormat("HH:mm");
+        SimpleDateFormat date= new SimpleDateFormat("dd/MM/yyyy");
+
+        referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                referenceUser.child("date").setValue(date.format(calendar.getTime()));
+                referenceUser.child("time").setValue(time.format(calendar.getTime()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void count() {
-        referenceRequests.addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCount.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    referenceRequests.setValue(0);
+                    referenceCount.setValue(0);
 
                 }
             }

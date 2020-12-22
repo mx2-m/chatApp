@@ -2,8 +2,6 @@ package com.example.secondapplication.adapter;
 
 import android.content.Context;
 import android.os.Vibrator;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAdapter> {
+public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAdapterMessages> {
 
     List<User> list;
     Context context;
@@ -49,19 +46,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
 
     @NonNull
     @Override
-    public viewHolderAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public viewHolderAdapterMessages onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_users, parent, false);
-        viewHolderAdapter holder = new viewHolderAdapter(view);
-
-
+        viewHolderAdapterMessages holder = new viewHolderAdapterMessages(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull viewHolderAdapter holder, int position) {
+    public void onBindViewHolder(@NonNull viewHolderAdapterMessages holder, int position) {
         User users = list.get(position);
 
-        boolean vibration = app.isMusic();
+       // boolean vibration = app.isVibration();
 
         final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         Glide.with(context).load(users.getPhoto()).into(holder.imageView);
@@ -73,8 +68,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             holder.cardView.setVisibility(View.VISIBLE);
         }
 
-        DatabaseReference buttons = database.getReference("Users").child(user.getUid()).child("Requests").child(users.getId());
-        buttons.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference buttons = database.getReference("Requests").child(user.getUid());
+        buttons.child(users.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String state = snapshot.child("state").getValue(String.class);
@@ -119,7 +114,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             @Override
             public void onClick(View v) {
 
-                DatabaseReference reference = database.getReference("Users").child(user.getUid()).child("Requests");
+                DatabaseReference reference = database.getReference("Requests").child(user.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -134,7 +129,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                 });
 
 
-                DatabaseReference reference1 = database.getReference("Users").child(users.getId()).child("Requests");
+                DatabaseReference reference1 = database.getReference("Requests").child(users.getId());
                 reference1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -150,7 +145,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                 });
 
 
-                DatabaseReference count = database.getReference("Users").child(users.getId()).child("requests");
+                DatabaseReference count = database.getReference("Count").child(users.getId());
                 count.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -162,7 +157,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                                 count.setValue(value + 1);
                             }
 
-
+                        }else{
+                            count.setValue(1);
                         }
                     }
 
@@ -171,8 +167,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
 
                     }
                 });
-                if(vibration){
-                vibrator.vibrate(400);}
+               // if (vibration) {
+                    vibrator.vibrate(400);
+               // }
             }
         });
 
@@ -180,12 +177,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             @Override
             public void onClick(View v) {
 
-                DatabaseReference reference = database.getReference("Users").child(user.getUid()).child("Requests");
+                DatabaseReference reference = database.getReference("Requests").child(users.getId()).child(user.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        reference.child(users.getId()).child("state").setValue("friends");
+                        reference.child("state").setValue("friends");
                     }
 
                     @Override
@@ -194,12 +191,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     }
                 });
 
-                DatabaseReference reference1 = database.getReference("Users").child(users.getId()).child("Requests");
+                DatabaseReference reference1 = database.getReference("Requests").child(user.getUid()).child(users.getId());
                 reference1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        reference1.child(user.getUid()).child("state").setValue("friends");
+                        reference1.child("state").setValue("friends");
 
                     }
 
@@ -209,8 +206,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     }
                 });
 
-                if(vibration){
-                vibrator.vibrate(400);}
+               // if (vibration) {
+                    vibrator.vibrate(400);
+              //  }
 
             }
         });
@@ -223,7 +221,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
         return list.size();
     }
 
-    public class viewHolderAdapter extends RecyclerView.ViewHolder {
+    public class viewHolderAdapterMessages extends RecyclerView.ViewHolder {
 
         TextView textView;
         ImageView imageView;
@@ -232,7 +230,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
         ProgressBar progressBar;
 
 
-        public viewHolderAdapter(@NonNull View itemView) {
+        public viewHolderAdapterMessages(@NonNull View itemView) {
             super(itemView);
 
             textView = itemView.findViewById(R.id.textViewUsers);
