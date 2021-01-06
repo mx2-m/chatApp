@@ -64,7 +64,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
         final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         holder.textViewUser.setText(users.getName());
-        Glide.with(context).load(users.getId()).into(holder.imageView);
+      //  Glide.with(context).load(users.getPhoto()).into(holder.imageView);
 
         DatabaseReference requests = database.getReference("Requests").child(user.getUid());
         requests.child(users.getId()).addValueEventListener(new ValueEventListener() {
@@ -93,10 +93,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
 
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat time1 = new SimpleDateFormat("HH:mm");
+       // SimpleDateFormat time1 = new SimpleDateFormat("HH:mm");
         SimpleDateFormat date1 = new SimpleDateFormat("dd/MM/yyyy");
 
-        DatabaseReference ref_state = database.getReference("State").child(users.getState());
+        DatabaseReference ref_state = database.getReference("State").child(users.getId());
         ref_state.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -110,22 +110,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
                         holder.tv_online.setVisibility(View.VISIBLE);
                         holder.imageView.setVisibility(View.VISIBLE);
                         holder.offline.setVisibility(View.GONE);
-                        holder.tv_online.setVisibility(View.GONE);
+                        holder.tv_offline.setVisibility(View.GONE);
 
 
                     } else {
                         holder.tv_online.setVisibility(View.GONE);
                         holder.imageView.setVisibility(View.GONE);
                         holder.offline.setVisibility(View.VISIBLE);
-                        holder.tv_online.setVisibility(View.VISIBLE);
+                        holder.tv_offline.setVisibility(View.VISIBLE);
+                        holder.tv_offline.setText("Offline"+time + date);
 
                     }
 
-                    if (date.equals(date1.format(calendar.getTime()))) {
-                        holder.tv_offline.setText(time);
+                  /*  if (date.equals(date1.format(calendar.getTime()))) {
+                        holder.tv_offline.setText("Offline"+time);
                     } else {
-                        holder.tv_offline.setText(time + date);
-                    }
+                        holder.tv_offline.setText("Offline"+time + date);
+                    }*/
                 }
             }
 
@@ -134,6 +135,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
 
             }
         });
+
+
+        
 
 
     }

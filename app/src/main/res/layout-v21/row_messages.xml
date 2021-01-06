@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-
+        android:visibility="gone"
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             </ImageView>
 
             <TextView
-                android:text="offline"
+
                 android:id="@+id/tv_offline"
                 android:visibility="gone"
                 android:layout_width="wrap_content"

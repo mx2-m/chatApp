@@ -127,7 +127,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // final FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         userUnique();
-        //userState();
+
     }
 
     private void userState(String state) {
@@ -135,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                State state1=new State(state," ","");
+                State state1=new State(state," "," "," ");
                 referenceState.setValue(state1);
             }
 

@@ -4,44 +4,52 @@ import java.util.List;
 
 public class Messages {
 
-    private List<Message> messages;
-    private String userID;
+    private String message;
+    private String send;
+    private String recived;
+    private String viewed;
 
-
-    public Messages(List<Message> messages, String userID) {
-        this.messages = messages;
-        this.userID = userID;
+    public Messages(String message, String send, String recived, String viewed) {
+        this.message = message;
+        this.send = send;
+        this.recived = recived;
+        this.viewed = viewed;
     }
 
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public Messages() {
     }
 
 
-    public void add(Message message) {
-
-        messages.add(message);
+    public String getMessage() {
+        return message;
     }
 
-    public void remove(int position) {
-        messages.remove(position);
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void edit(int position, Message message) {
-        messages.set(position, message);
+    public String getSend() {
+        return send;
     }
 
+    public void setSend(String send) {
+        this.send = send;
+    }
 
+    public String getRecived() {
+        return recived;
+    }
+
+    public void setRecived(String recived) {
+        this.recived = recived;
+    }
+
+    public String getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(String viewed) {
+        this.viewed = viewed;
+    }
 }
+
