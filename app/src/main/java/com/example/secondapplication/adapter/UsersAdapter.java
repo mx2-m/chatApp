@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,9 +115,62 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             }
         });
 
-        holder.add.setOnClickListener(new View.OnClickListener() {
+        holder.friends.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                Log.i("Kliknuto","!!!!!");
+
+                // if (vibration) {
+                vibrator.vibrate(400);
+                // }
+            }
+        });
+
+        holder.friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Kliknuto","!!!!!");
+
+                pref=v.getContext().getSharedPreferences("usersPreferences",Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor=pref.edit();
+
+                final DatabaseReference reference= database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String id= snapshot.getValue(String.class);
+                        if(snapshot.exists()){
+
+                            Intent intent= new Intent(v.getContext(), MessagesActivity.class);
+                            intent.putExtra("name",users.getName());
+                            intent.putExtra("img",users.getPhoto());
+                            intent.putExtra("idUser",users.getId());
+                            intent.putExtra("id",id);
+                            editor.putString("userPref",users.getId());
+                            editor.apply();
+
+                            v.getContext().startActivity(intent);
+
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                vibrator.vibrate(400);
+
+            }
+        });
+
+        holder.add.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.i("Kliknuto","!!!!!");
 
                 DatabaseReference reference = database.getReference("Requests").child(user.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -217,54 +271,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     }
                 });
 
-                holder.friends.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        pref=v.getContext().getSharedPreferences("usersPreferences",Context.MODE_PRIVATE);
-                        final SharedPreferences.Editor editor=pref.edit();
-
-                        final DatabaseReference reference= database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String id= snapshot.getValue(String.class);
-                                if(snapshot.exists()){
-
-                                    Intent intent= new Intent(v.getContext(), MessagesActivity.class);
-                                    intent.putExtra("name",users.getName());
-                                    intent.putExtra("img",users.getPhoto());
-                                    intent.putExtra("idUser",users.getId());
-                                    intent.putExtra("id",id);
-                                    editor.putString("userPref",users.getId());
-                                    editor.apply();
-
-
-
-                                    v.getContext().startActivity(intent);
-
-
-
-
-
-
-                                }
-
-
-
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-
-
-                    }
-                });
 
 
                 // if (vibration) {

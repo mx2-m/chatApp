@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +38,9 @@ public class MessagesActivity extends AppCompatActivity {
     FirebaseUser user1= FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference referenceState=database.getReference("State").child(user1.getUid());
+    DatabaseReference referenceMessage=database.getReference("Messages");
+    EditText editText;
+    ImageButton imageButton;
 
 
 
@@ -54,6 +59,15 @@ public class MessagesActivity extends AppCompatActivity {
         username= findViewById(R.id.textViewUsers);
         online= findViewById(R.id.image_online);
         offline= findViewById(R.id.image_offline);
+        editText= findViewById(R.id.edit_text);
+        imageButton=findViewById(R.id.btn_send);
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         final String idUserPref=pref.getString("userPref"," ");
 
@@ -123,6 +137,12 @@ public class MessagesActivity extends AppCompatActivity {
         userState("offline");
         getTime();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void getTime() {

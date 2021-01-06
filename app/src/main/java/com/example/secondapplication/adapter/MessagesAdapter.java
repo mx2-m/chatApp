@@ -1,7 +1,10 @@
 package com.example.secondapplication.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.lib.Message;
 import com.example.lib.User;
 import com.example.secondapplication.ApplicationChat;
+import com.example.secondapplication.MessagesActivity;
 import com.example.secondapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +43,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    SharedPreferences pref;
 
 
     public MessagesAdapter(List<User> list, Context context) {
@@ -118,7 +123,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
                         holder.imageView.setVisibility(View.GONE);
                         holder.offline.setVisibility(View.VISIBLE);
                         holder.tv_offline.setVisibility(View.VISIBLE);
-                        holder.tv_offline.setText("Offline"+time + date);
+                        holder.tv_offline.setText("Offline "+time+" "+ date);
 
                     }
 
@@ -137,6 +142,40 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
         });
 
 
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                Log.i("Kliknuto","!!!!!");
+                pref=v.getContext().getSharedPreferences("usersPreferences",Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor=pref.edit();
+
+                final DatabaseReference reference= database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String id= snapshot.getValue(String.class);
+                        if(snapshot.exists()){
+
+                            Intent intent= new Intent(v.getContext(), MessagesActivity.class);
+                            intent.putExtra("name",users.getName());
+                            intent.putExtra("img",users.getPhoto());
+                            intent.putExtra("idUser",users.getId());
+                            intent.putExtra("id",id);
+                            editor.putString("userPref",users.getId());
+                            editor.apply();
+
+                            v.getContext().startActivity(intent);
+
+                        }
+
+                    }   @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         
 
 

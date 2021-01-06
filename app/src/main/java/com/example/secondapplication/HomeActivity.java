@@ -47,8 +47,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("ChatApp");
+      //  ActionBar actionBar = getSupportActionBar();
+      //  actionBar.setTitle("ChatApp");
 
         ViewPager2 viewPager2 = findViewById(R.id.viewPager);
         viewPager2.setAdapter(new PagesAdapter(this));
