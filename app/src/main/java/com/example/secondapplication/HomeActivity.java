@@ -168,8 +168,10 @@ public class HomeActivity extends AppCompatActivity {
         referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                referenceUser.child("date").setValue(date.format(calendar.getTime()));
-                referenceUser.child("time").setValue(time.format(calendar.getTime()));
+              /*  referenceUser.child("date").setValue(date.format(calendar.getTime()));
+                referenceUser.child("time").setValue(time.format(calendar.getTime()));*/
+                referenceState.child("date").setValue(date.format(calendar.getTime()));
+                referenceState.child("time").setValue(time.format(calendar.getTime()));
             }
 
             @Override
