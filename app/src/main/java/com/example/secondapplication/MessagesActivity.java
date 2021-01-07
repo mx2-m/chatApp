@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.example.lib.Messages;
 import com.example.lib.State;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,12 +63,6 @@ public class MessagesActivity extends AppCompatActivity {
         editText= findViewById(R.id.edit_text);
         imageButton=findViewById(R.id.btn_send);
 
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         final String idUserPref=pref.getString("userPref"," ");
 
@@ -78,6 +73,16 @@ public class MessagesActivity extends AppCompatActivity {
 
         username.setText(user);
         Glide.with(this).load(photo).into(imageView);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message=editText.getText().toString();
+                Messages messages= new Messages(user1.getUid(),idUser,message,"no");
+                referenceMessage.child(id).push().setValue(messages);
+                editText.setText(" ");
+
+            }
+        });
 
         final DatabaseReference ref=database.getReference("State").child(idUserPref).child("chat");
         ref.addValueEventListener(new ValueEventListener() {
