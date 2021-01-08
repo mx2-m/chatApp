@@ -7,14 +7,13 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lib.State;
 import com.example.lib.User;
-import com.example.secondapplication.adapter.PagesAdapter;
+import com.example.secondapplication.adapters.PagesAdapter;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -31,7 +30,7 @@ import java.util.Calendar;
 //import com.example.lib.User;
 
 
-//POPRAVITI SVE ZA "MOJ PROFIL", dodati login na menu, vibracija, notifikacije,pref popraviti,logo
+// dodati login na menu, vibracija, notifikacije,pref popraviti,logo
 
 public class HomeActivity extends AppCompatActivity {
 

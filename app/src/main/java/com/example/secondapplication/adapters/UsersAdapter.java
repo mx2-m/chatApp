@@ -1,4 +1,4 @@
-package com.example.secondapplication.adapter;
+package com.example.secondapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -119,7 +119,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
 
             @Override
             public void onClick(View v) {
-                Log.i("Kliknuto","!!!!!");
+                Log.i("Kliknuto", "!!!!!");
 
                 // if (vibration) {
                 vibrator.vibrate(400);
@@ -130,24 +130,24 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
         holder.friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Kliknuto","!!!!!");
+                Log.i("Kliknuto", "!!!!!");
 
-                pref=v.getContext().getSharedPreferences("usersPreferences",Context.MODE_PRIVATE);
-                final SharedPreferences.Editor editor=pref.edit();
+                pref = v.getContext().getSharedPreferences("usersPreferences", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor = pref.edit();
 
-                final DatabaseReference reference= database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
+                final DatabaseReference reference = database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String id= snapshot.getValue(String.class);
-                        if(snapshot.exists()){
+                        String id = snapshot.getValue(String.class);
+                        if (snapshot.exists()) {
 
-                            Intent intent= new Intent(v.getContext(), MessagesActivity.class);
-                            intent.putExtra("name",users.getName());
-                            intent.putExtra("img",users.getPhoto());
-                            intent.putExtra("idUser",users.getId());
-                            intent.putExtra("id",id);
-                            editor.putString("userPref",users.getId());
+                            Intent intent = new Intent(v.getContext(), MessagesActivity.class);
+                            intent.putExtra("name", users.getName());
+                            intent.putExtra("img", users.getPhoto());
+                            intent.putExtra("idUser", users.getId());
+                            intent.putExtra("id", id);
+                            editor.putString("userPref", users.getId());
                             editor.apply();
 
                             v.getContext().startActivity(intent);
@@ -155,6 +155,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                         }
 
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -170,14 +171,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
 
             @Override
             public void onClick(View v) {
-                Log.i("Kliknuto","!!!!!");
+                Log.i("Kliknuto", "!!!!!");
 
                 DatabaseReference reference = database.getReference("Requests").child(user.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        Requests request= new Requests("sent","");
+                        Requests request = new Requests("sent", "");
                         reference.child(users.getId()).setValue(request);
                     }
 
@@ -193,7 +194,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        Requests request= new Requests("request","");
+                        Requests request = new Requests("request", "");
                         reference1.child(user.getUid()).setValue(request);
 
                     }
@@ -238,14 +239,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             public void onClick(View v) {
 
 
-                String idChat= buttons.push().getKey();
+                String idChat = buttons.push().getKey();
 
                 DatabaseReference reference = database.getReference("Requests").child(users.getId()).child(user.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        Requests request= new Requests("friends",idChat);   //jedinstveni id
+                        Requests request = new Requests("friends", idChat);   //jedinstveni id
                         reference.setValue(request);
                     }
 
@@ -260,7 +261,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        Requests request= new Requests("friends",idChat);
+                        Requests request = new Requests("friends", idChat);
                         reference1.setValue(request);
 
                     }
@@ -270,8 +271,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
 
                     }
                 });
-
-
 
 
                 // if (vibration) {

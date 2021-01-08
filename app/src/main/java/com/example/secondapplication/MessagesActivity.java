@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.lib.Messages;
 import com.example.lib.State;
-import com.example.secondapplication.adapter.ChatsAdapter;
+import com.example.secondapplication.adapters.ChatsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

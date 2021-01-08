@@ -1,4 +1,4 @@
-package com.example.secondapplication.adapter;
+package com.example.secondapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,17 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.lib.Message;
 import com.example.lib.User;
 import com.example.secondapplication.ApplicationChat;
 import com.example.secondapplication.MessagesActivity;
@@ -69,7 +65,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
         final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         holder.textViewUser.setText(users.getName());
-      //  Glide.with(context).load(users.getPhoto()).into(holder.imageView);
+        //  Glide.with(context).load(users.getPhoto()).into(holder.imageView);
 
         DatabaseReference requests = database.getReference("Requests").child(user.getUid());
         requests.child(users.getId()).addValueEventListener(new ValueEventListener() {
@@ -98,7 +94,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
 
 
         Calendar calendar = Calendar.getInstance();
-       // SimpleDateFormat time1 = new SimpleDateFormat("HH:mm");
+        // SimpleDateFormat time1 = new SimpleDateFormat("HH:mm");
         SimpleDateFormat date1 = new SimpleDateFormat("dd/MM/yyyy");
 
         DatabaseReference ref_state = database.getReference("State").child(users.getId());
@@ -123,7 +119,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
                         holder.imageView.setVisibility(View.GONE);
                         holder.offline.setVisibility(View.VISIBLE);
                         holder.tv_offline.setVisibility(View.VISIBLE);
-                        holder.tv_offline.setText("Offline "+time+" "+ date);
+                        holder.tv_offline.setText("Offline " + time + " " + date);
 
                     }
 
@@ -146,37 +142,38 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
             @Override
             public void onClick(final View v) {
 
-                Log.i("Kliknuto","!!!!!");
-                pref=v.getContext().getSharedPreferences("usersPreferences",Context.MODE_PRIVATE);
-                final SharedPreferences.Editor editor=pref.edit();
+                Log.i("Kliknuto", "!!!!!");
+                pref = v.getContext().getSharedPreferences("usersPreferences", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor = pref.edit();
 
-                final DatabaseReference reference= database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
+                final DatabaseReference reference = database.getReference("Requests").child(user.getUid()).child(users.getId()).child("idChat");
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String id= snapshot.getValue(String.class);
-                        if(snapshot.exists()){
+                        String id = snapshot.getValue(String.class);
+                        if (snapshot.exists()) {
 
-                            Intent intent= new Intent(v.getContext(), MessagesActivity.class);
-                            intent.putExtra("name",users.getName());
-                            intent.putExtra("img",users.getPhoto());
-                            intent.putExtra("idUser",users.getId());
-                            intent.putExtra("id",id);
-                            editor.putString("userPref",users.getId());
+                            Intent intent = new Intent(v.getContext(), MessagesActivity.class);
+                            intent.putExtra("name", users.getName());
+                            intent.putExtra("img", users.getPhoto());
+                            intent.putExtra("idUser", users.getId());
+                            intent.putExtra("id", id);
+                            editor.putString("userPref", users.getId());
                             editor.apply();
 
                             v.getContext().startActivity(intent);
 
                         }
 
-                    }   @Override
+                    }
+
+                    @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
             }
         });
-        
 
 
     }
