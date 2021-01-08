@@ -3,6 +3,8 @@ package com.example.secondapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.lib.Messages;
 import com.example.lib.State;
+import com.example.secondapplication.adapter.ChatsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,18 +36,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MessagesActivity extends AppCompatActivity {
 
     TextView username;
-    ImageView online,offline;
+    ImageView online, offline;
     SharedPreferences pref;
     CircleImageView imageView;
 
-    FirebaseUser user1= FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-    DatabaseReference referenceState=database.getReference("State").child(user1.getUid());
-    DatabaseReference referenceMessage=database.getReference("Messages");
+    FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference referenceState = database.getReference("State").child(user1.getUid());
+    DatabaseReference referenceMessage = database.getReference("Messages");
     EditText editText;
     ImageButton imageButton;
 
-
+    String idChat;
+    boolean onlineF = false;
+    RecyclerView rvChats;
+    ChatsAdapter adapter;
+    ArrayList<Messages> list;
 
 
     @Override
@@ -51,49 +59,44 @@ public class MessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        Toolbar toolbar= findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        pref=getApplicationContext().getSharedPreferences("userPref",MODE_PRIVATE);
-        imageView=findViewById(R.id.imgUser);
-        username= findViewById(R.id.textViewUsers);
-        online= findViewById(R.id.image_online);
-        offline= findViewById(R.id.image_offline);
-        editText= findViewById(R.id.edit_text);
-        imageButton=findViewById(R.id.btn_send);
+        pref = getApplicationContext().getSharedPreferences("userPref", MODE_PRIVATE);
+        imageView = findViewById(R.id.imgUser);
+        username = findViewById(R.id.textViewUsers);
+        online = findViewById(R.id.image_online);
+        offline = findViewById(R.id.image_offline);
+        editText = findViewById(R.id.edit_text);
+        imageButton = findViewById(R.id.btn_send);
 
 
-        final String idUserPref=pref.getString("userPref"," ");
+        final String idUserPref = pref.getString("userPref", " ");
 
-        String user=getIntent().getExtras().getString("name");
-        String photo=getIntent().getExtras().getString("img");
-        String idUser=getIntent().getExtras().getString("idUser");
-        String id=getIntent().getExtras().getString("id");
+        String user = getIntent().getExtras().getString("name");
+        String photo = getIntent().getExtras().getString("img");
+        String idUser = getIntent().getExtras().getString("idUser");
+        idChat = getIntent().getExtras().getString("id");
+
+        seen();
 
         username.setText(user);
         Glide.with(this).load(photo).into(imageView);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message=editText.getText().toString();
-                Messages messages= new Messages(user1.getUid(),idUser,message,"no");
-                referenceMessage.child(id).push().setValue(messages);
-                editText.setText(" ");
 
-            }
-        });
 
-        final DatabaseReference ref=database.getReference("State").child(idUserPref).child("chat");
+        final DatabaseReference ref = database.getReference("State").child(idUserPref).child("chat");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String chat= snapshot.getValue(String.class);
-                if(snapshot.exists()){
-                    if(chat.equals(user1.getUid())){
+                String chat = snapshot.getValue(String.class);
+                if (snapshot.exists()) {
+                    if (chat.equals(user1.getUid())) {
+                        onlineF = true;
                         online.setVisibility(View.VISIBLE);
                         offline.setVisibility(View.GONE);
-                    }else{
+                    } else {
+                        onlineF = false;
                         online.setVisibility(View.GONE);
                         offline.setVisibility(View.VISIBLE);
                     }
@@ -106,19 +109,114 @@ public class MessagesActivity extends AppCompatActivity {
             }
         });
 
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = editText.getText().toString();
+
+                if (!message.isEmpty()) {
+
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
+                    String idPush = referenceMessage.push().getKey();
+
+                    if (onlineF) {
+                        Messages messages = new Messages(idPush,message,user1.getUid(),idUser,"yes", date.format(calendar.getTime()), time.format(calendar.getTime()));
+                        referenceMessage.child(idChat).push().setValue(messages);
+                        editText.setText(" ");
+                    } else {
+                        Messages messages = new Messages(idPush,message,user1.getUid(),idUser, "no", date.format(calendar.getTime()), time.format(calendar.getTime()));
+                        referenceMessage.child(idChat).child(idPush).setValue(messages);
+                        editText.setText(" ");
+
+                    }
+
+                }
 
 
+            }
+        });
+
+        rvChats = findViewById(R.id.rv);
+        rvChats.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        rvChats.setLayoutManager(linearLayoutManager);
+
+        list = new ArrayList<>();
+        adapter = new ChatsAdapter(list, this);
+        rvChats.setAdapter(adapter);
+
+        readMessages();
+
+    }
+
+    private void seen() {
+
+        referenceMessage.child(idChat).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot s : snapshot.getChildren()) {
+
+                    Messages messages = s.getValue(Messages.class);
+                    if (messages.getReciver().equals(user1.getUid())) {
+                        referenceMessage.child(idChat).child(messages.getId()).child("viewed").setValue("yes");
 
 
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void readMessages() {
+        referenceMessage.child(idChat).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    list.removeAll(list);
+                    for (DataSnapshot s : snapshot.getChildren()) {
+
+                        Messages messages = s.getValue(Messages.class);
+                        list.add(messages);
+                        scroll();
+                    }
+                    adapter.notifyDataSetChanged();
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void scroll() {
+        rvChats.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private void userState(String state) {
         referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String id=pref.getString("userPref"," ");
+                final String id = pref.getString("userPref", " ");
 
-                State state1=new State(state," "," ",id);
+                State state1 = new State(state, " ", " ", id);
                 referenceState.setValue(state1);
             }
 
@@ -151,9 +249,9 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     private void getTime() {
-        Calendar calendar=Calendar.getInstance();
-        SimpleDateFormat time=new SimpleDateFormat("HH:mm");
-        SimpleDateFormat date= new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
 
         referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

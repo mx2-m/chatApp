@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Messages {
 
+    private String id;
     private String message;
     private String sender;
     private String reciver;
@@ -12,7 +13,8 @@ public class Messages {
     private String time;
 
 
-    public Messages(String message, String sender, String reciver, String viewed, String date, String time) {
+    public Messages(String id, String message, String sender, String reciver, String viewed, String date, String time) {
+        this.id = id;
         this.message = message;
         this.sender = sender;
         this.reciver = reciver;
@@ -70,6 +72,14 @@ public class Messages {
 
     public void setViewed(String viewed) {
         this.viewed = viewed;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

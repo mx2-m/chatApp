@@ -31,6 +31,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
     Boolean right=false;
     FirebaseUser user;
 
+
+
     public ChatsAdapter(List<Messages> list, Context context) {
         this.list = list;
         this.context = context;

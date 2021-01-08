@@ -31,7 +31,8 @@ import java.util.Calendar;
 //import com.example.lib.User;
 
 
-//POPRAVITI SVE ZA "MOJ PROFIL", dodati login na menu, vibracija, notifikacije,pref popraviti
+//POPRAVITI SVE ZA "MOJ PROFIL", dodati login na menu, vibracija, notifikacije,pref popraviti,logo
+
 public class HomeActivity extends AppCompatActivity {
 
 
