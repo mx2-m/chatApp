@@ -3,10 +3,17 @@ package com.example.secondapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -35,29 +42,30 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    TextView username;
-    ImageView online, offline;
-    SharedPreferences pref;
-    CircleImageView imageView;
+    private TextView username;
+    private ImageView online, offline;
+    private SharedPreferences pref;
+    private CircleImageView imageView;
 
-    FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference referenceState = database.getReference("State").child(user1.getUid());
-    DatabaseReference referenceMessage = database.getReference("Messages");
-    EditText editText;
-    ImageButton imageButton;
+    private FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference referenceState = database.getReference("State").child(user1.getUid());
+    private DatabaseReference referenceMessage = database.getReference("Messages");
+    private EditText editText;
+    private ImageButton imageButton;
 
-    String idChat;
+    private String idChat;
     boolean onlineF = false;
-    RecyclerView rvChats;
-    ChatsAdapter adapter;
-    ArrayList<Messages> list;
+    private RecyclerView rvChats;
+    private ChatsAdapter adapter;
+    private ArrayList<Messages> list;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,6 +120,10 @@ public class MessagesActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+
                 String message = editText.getText().toString();
 
                 if (!message.isEmpty()) {
@@ -122,11 +134,11 @@ public class MessagesActivity extends AppCompatActivity {
                     String idPush = referenceMessage.push().getKey();
 
                     if (onlineF) {
-                        Messages messages = new Messages(idPush,message,user1.getUid(),idUser,"yes", date.format(calendar.getTime()), time.format(calendar.getTime()));
+                        Messages messages = new Messages(idPush, message, user1.getUid(), idUser, "yes", date.format(calendar.getTime()), time.format(calendar.getTime()));
                         referenceMessage.child(idChat).push().setValue(messages);
                         editText.setText(" ");
                     } else {
-                        Messages messages = new Messages(idPush,message,user1.getUid(),idUser, "no", date.format(calendar.getTime()), time.format(calendar.getTime()));
+                        Messages messages = new Messages(idPush, message, user1.getUid(), idUser, "no", date.format(calendar.getTime()), time.format(calendar.getTime()));
                         referenceMessage.child(idChat).child(idPush).setValue(messages);
                         editText.setText(" ");
 
@@ -188,15 +200,12 @@ public class MessagesActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     list.removeAll(list);
                     for (DataSnapshot s : snapshot.getChildren()) {
-
                         Messages messages = s.getValue(Messages.class);
                         list.add(messages);
                         scroll();
                     }
                     adapter.notifyDataSetChanged();
-
                 }
-
             }
 
             @Override

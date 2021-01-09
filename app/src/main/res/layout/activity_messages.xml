@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.SecondApplicationNoActionBar"
     tools:context=".MessagesActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,12 +14,13 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/endblue">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgUser"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_margin="5dp"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp" />
@@ -59,9 +59,7 @@
 
             </ImageView>
 
-
         </androidx.appcompat.widget.Toolbar>
-
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -69,8 +67,8 @@
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
-        android:layout_above="@+id/relative_layout">
+        android:layout_above="@+id/relative_layout"
+        android:layout_below="@+id/app_bar">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -78,16 +76,15 @@
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_alignParentBottom="true"
-        >
+        android:padding="5dp">
 
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:hint="Write message...">
+            android:hint="@string/write">
 
         </EditText>
 
@@ -97,12 +94,8 @@
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_send"/>
-
+            android:background="@drawable/ic_send" />
 
     </RelativeLayout>
-
-
-
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.secondapplication.adapters;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +44,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     SharedPreferences pref;
+    private NotificationManagerCompat notificationManager;
 
 
     public UsersAdapter(List<User> list, Context context) {
@@ -54,6 +58,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
     public viewHolderAdapterMessages onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_users, parent, false);
         viewHolderAdapterMessages holder = new viewHolderAdapterMessages(view);
+        notificationManager = NotificationManagerCompat.from(context);
         return holder;
     }
 
@@ -99,6 +104,15 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                         holder.friends.setVisibility(View.GONE);
                         holder.send.setVisibility(View.GONE);
 
+
+                        Notification notification = new NotificationCompat.Builder(context, app.CHANNEL_2_ID)   //https://codinginflow.com/tutorials/android/notifications-notification-channels/part-2-tap-action-action-buttons
+                                .setSmallIcon(R.drawable.ic_person)
+
+                                .setContentTitle("Friend Request")
+                                .setContentText("U have a new friend request")
+                                .setPriority(NotificationCompat.PRIORITY_LOW)
+                                .build();
+                        notificationManager.notify(2, notification);
                     }
                 } else {
                     holder.add.setVisibility(View.VISIBLE);

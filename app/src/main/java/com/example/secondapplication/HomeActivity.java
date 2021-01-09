@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
@@ -14,6 +17,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lib.State;
 import com.example.lib.User;
 import com.example.secondapplication.adapters.PagesAdapter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -30,7 +37,7 @@ import java.util.Calendar;
 //import com.example.lib.User;
 
 
-// dodati login na menu, vibracija, notifikacije,pref popraviti,logo
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -47,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-      //  ActionBar actionBar = getSupportActionBar();
+       ActionBar actionBar = getSupportActionBar();
       //  actionBar.setTitle("ChatApp");
 
         ViewPager2 viewPager2 = findViewById(R.id.viewPager);
@@ -68,9 +75,9 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case 2:
                         tab.setText("Requests");
-                        tab.setIcon(R.drawable.ic_requests);
+                        tab.setIcon(R.drawable.ic_request);
                         BadgeDrawable badgeDrawable = tab.getOrCreateBadge();
-                        badgeDrawable.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+                        badgeDrawable.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.endblue));
 
 
                         referenceCount.addValueEventListener(new ValueEventListener() {
@@ -99,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case 3:
                         tab.setText("My Profile");
-                        tab.setIcon(R.drawable.ic_requests);
+                        tab.setIcon(R.drawable.ic_person);
                         break;
 
 
@@ -239,10 +246,13 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.settings:
                 startActivity(new Intent(this.getBaseContext(), Settings.class));
                 break;
-
+            /* case R.id.logout:
+                startActivity(new Intent(this.getBaseContext(), LogoutActivity.class));
+                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

@@ -109,7 +109,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.viewHo
 
                     if (state.equals("online")) {
                         holder.tv_online.setVisibility(View.VISIBLE);
-                        holder.imageView.setVisibility(View.VISIBLE);
+                        holder.online.setVisibility(View.VISIBLE);
+                        holder.imageView.setVisibility(View.GONE);
                         holder.offline.setVisibility(View.GONE);
                         holder.tv_offline.setVisibility(View.GONE);
 

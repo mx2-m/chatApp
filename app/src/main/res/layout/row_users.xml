@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        app:cardCornerRadius="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
         android:layout_margin="6dp"
-        >
+        android:elevation="10dp"
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+
             android:orientation="horizontal">
 
 
             <!--https://github.com/hdodenhof/CircleImageView-->
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgUser"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp" />
@@ -47,66 +46,64 @@
             </TextView>
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/add"
                 android:layout_width="108dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:backgroundTint="@color/purple_500"
-                android:drawableLeft="@drawable/ic_requests"
+                android:backgroundTint="@color/graylight"
+                android:drawableLeft="@drawable/ic_request"
                 android:gravity="center"
-                android:text="Add"
+                android:text="@string/add"
                 android:textColor="@color/black"
-                android:textSize="10dp">
+                android:textSize="10dp"
+                android:visibility="gone">
 
 
             </Button>
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:backgroundTint="@color/purple_500"
-                android:drawableLeft="@drawable/ic_requests"
-                android:textColor="@color/black"
+                android:backgroundTint="@color/graylight"
+                android:drawableLeft="@drawable/ic_request"
                 android:gravity="center"
+                android:text="@string/send"
+                android:textColor="@color/black"
                 android:textSize="10dp"
-                android:text="Send"
-                >
-
+                android:visibility="gone">
 
             </Button>
 
             <Button
                 android:id="@+id/request"
-                android:textSize="10dp"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:backgroundTint="@color/purple_500"
+                android:backgroundTint="@color/graylight"
                 android:drawableLeft="@drawable/ic_check"
-                android:textColor="@color/black"
                 android:gravity="center"
-                android:text="Request">
+                android:text="@string/accept"
+                android:textColor="@color/black"
+                android:textSize="10dp"
+                android:visibility="gone">
 
             </Button>
 
 
             <Button
                 android:id="@+id/friend"
-                android:visibility="gone"
-                android:textSize="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:backgroundTint="@color/purple_500"
+                android:backgroundTint="@color/startblue"
                 android:drawableLeft="@drawable/ic_check"
-                android:textColor="@color/black"
                 android:gravity="center"
-                android:text="Friend">
+                android:text="@string/friend"
+                android:textColor="@color/black"
+                android:textSize="10dp"
+                android:visibility="gone">
 
             </Button>
 
@@ -116,13 +113,5 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="21dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp">
 
-    </ProgressBar>
-
-
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
