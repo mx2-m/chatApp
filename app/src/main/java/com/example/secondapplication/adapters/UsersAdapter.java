@@ -58,7 +58,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
     public viewHolderAdapterMessages onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_users, parent, false);
         viewHolderAdapterMessages holder = new viewHolderAdapterMessages(view);
+
         notificationManager = NotificationManagerCompat.from(context);
+
         return holder;
     }
 
@@ -161,8 +163,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                             intent.putExtra("img", users.getPhoto());
                             intent.putExtra("idUser", users.getId());
                             intent.putExtra("id", id);
-                            editor.putString("userPref", users.getId());
-                            editor.apply();
+                            //editor.putString("userPref", users.getId());
+                           // editor.apply();
 
                             v.getContext().startActivity(intent);
 

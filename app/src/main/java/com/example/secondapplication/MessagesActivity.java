@@ -44,7 +44,7 @@ public class MessagesActivity extends AppCompatActivity {
 
     private TextView username;
     private ImageView online, offline;
-    private SharedPreferences pref;
+    //private SharedPreferences pref;
     private CircleImageView imageView;
 
     private FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
@@ -71,7 +71,7 @@ public class MessagesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        pref = getApplicationContext().getSharedPreferences("userPref", MODE_PRIVATE);
+       // pref = getApplicationContext().getSharedPreferences("userPref", MODE_PRIVATE);
         imageView = findViewById(R.id.imgUser);
         username = findViewById(R.id.textViewUsers);
         online = findViewById(R.id.image_online);
@@ -80,7 +80,7 @@ public class MessagesActivity extends AppCompatActivity {
         imageButton = findViewById(R.id.btn_send);
 
 
-        final String idUserPref = pref.getString("userPref", " ");
+      //  final String idUserPref = pref.getString("userPref", " ");
 
         String user = getIntent().getExtras().getString("name");
         String photo = getIntent().getExtras().getString("img");
@@ -93,7 +93,7 @@ public class MessagesActivity extends AppCompatActivity {
         Glide.with(this).load(photo).into(imageView);
 
 
-        final DatabaseReference ref = database.getReference("State").child(idUserPref).child("chat");
+      /*  final DatabaseReference ref = database.getReference("State").child(idUserPref).child("chat");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -115,13 +115,11 @@ public class MessagesActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
 
                 String message = editText.getText().toString();
@@ -133,7 +131,7 @@ public class MessagesActivity extends AppCompatActivity {
                     SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
                     String idPush = referenceMessage.push().getKey();
 
-                    if (onlineF) {
+                    if (onlineF) {      //ne radi
                         Messages messages = new Messages(idPush, message, user1.getUid(), idUser, "yes", date.format(calendar.getTime()), time.format(calendar.getTime()));
                         referenceMessage.child(idChat).push().setValue(messages);
                         editText.setText(" ");
@@ -141,12 +139,8 @@ public class MessagesActivity extends AppCompatActivity {
                         Messages messages = new Messages(idPush, message, user1.getUid(), idUser, "no", date.format(calendar.getTime()), time.format(calendar.getTime()));
                         referenceMessage.child(idChat).child(idPush).setValue(messages);
                         editText.setText(" ");
-
                     }
-
                 }
-
-
             }
         });
 
@@ -223,9 +217,9 @@ public class MessagesActivity extends AppCompatActivity {
         referenceState.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String id = pref.getString("userPref", " ");
+              //  final String id = pref.getString("userPref", " ");
 
-                State state1 = new State(state, " ", " ", id);
+                State state1 = new State(state, " ", " ", " ");
                 referenceState.setValue(state1);
             }
 
